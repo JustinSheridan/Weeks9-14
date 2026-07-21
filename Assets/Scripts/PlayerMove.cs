@@ -7,18 +7,37 @@ public class PlayerMove : MonoBehaviour
 
     private Vector2 movementDirection = Vector2.zero;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private Vector2 lastMousePosition = Vector2.zero;
+
+    private Camera mainCamera;
+
     void Start()
     {
-        
+        lastMousePosition = Mouse.current.position.ReadValue();
+        mainCamera = Camera.main;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        //If we have a Vector2 and we want to add it to the a Vector3
-        //We can convert between them using (Vector3) in front of the Vector2
         transform.position += (Vector3)movementDirection * speed * Time.deltaTime;
+    }
+
+    public void OnLook(InputAction.CallbackContext context)
+    {
+        // Read the pointer
+        Vector2 screenPosition = context.ReadValue<Vector2>();
+        lastMousePosition = screenPosition;
+
+        // Convert screen position to world position
+        Vector3 worldPosition = mainCamera.ScreenToWorldPoint(
+            new Vector3(screenPosition.x, screenPosition.y, mainCamera.nearClipPlane)
+        );
+
+        Vector2 direction = (Vector2)worldPosition - (Vector2)transform.position;
+
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+        transform.rotation = Quaternion.Euler(0f, 0f, angle);
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -29,6 +48,6 @@ public class PlayerMove : MonoBehaviour
 
     public void OnAttack(InputAction.CallbackContext context)
     {
-        Debug.Log("Attack! "+context.phase);
+        Debug.Log("Attack! " + context.phase);
     }
 }
