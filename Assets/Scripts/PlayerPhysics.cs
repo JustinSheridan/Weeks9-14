@@ -39,5 +39,37 @@ public class PlayerPhysics : MonoBehaviour
     {
         inputMovement = newInput;
     }
+
+    // Unified entry point for timed hazard effects (callable via UnityEvent or script)
+    public void ApplyTimedEffect(string effectType)
+    {
+        if (hazardEffectCoroutine != null)
+        {
+            StopCoroutine(hazardEffectCoroutine);
+        }
+
+        hazardEffectCoroutine = StartCoroutine(EffectDurationRoutine(effectType));
+    }
+
+    private IEnumerator EffectDurationRoutine(string effectType)
+    {
+        else if (effectType == "Thorns")
+        {
+            // Thorns: Slow speed gain drastically
+            activeSpeedGain = 3f;
+            inertiaRetention = defaultInertia; // Restore regular inertia
+        }
+
+        // Wait 5 seconds
+        yield return new WaitForSeconds(5f);
+
+        //  revert to original values once time is reached
+        activeSpeedGain = defaultSpeedGain;
+        inertiaRetention = defaultInertia;
+    }
+
+    // Create public events that can be referenced by our hazards
+    // public void ApplyIceEffect() => ApplyTimedEffect("Ice"); Ice does not exist yet
+    public void ApplyThornsEffect() => ApplyTimedEffect("Thorns");
 }
 
