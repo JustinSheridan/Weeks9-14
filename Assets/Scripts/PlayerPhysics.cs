@@ -53,7 +53,8 @@ public class PlayerPhysics : MonoBehaviour
 
     private IEnumerator EffectDurationRoutine(string effectType)
     {
-        else if (effectType == "Thorns")
+        // Removed Ice block
+        if (effectType == "Thorns") 
         {
             // Thorns: Slow speed gain drastically
             activeSpeedGain = 3f;
