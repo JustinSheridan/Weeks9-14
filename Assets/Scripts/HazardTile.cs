@@ -9,7 +9,6 @@ public class HazardTile : MonoBehaviour {
     private bool isTriggered = false;
     
     public PlayerPhysics playerRef;       // Assign in Inspector to handle physics timing
-    public EffectType activeEffect;       // Set to Ice or Thorns in Inspector
 
     void Update() {
         if (targetRenderer == null) return;
@@ -20,11 +19,6 @@ public class HazardTile : MonoBehaviour {
         if (isInside && !isTriggered)
         {
             // Trigger the timed physics effect
-            if (playerRef != null)
-            {
-                playerRef.ApplyTimedEffect(activeEffect.ToString());
-            }
-
             isTriggered = true;
             Debug.Log("HazardTile triggered: " + gameObject.name);
         }
