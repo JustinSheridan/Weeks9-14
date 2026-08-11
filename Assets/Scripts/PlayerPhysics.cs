@@ -53,8 +53,13 @@ public class PlayerPhysics : MonoBehaviour
 
     private IEnumerator EffectDurationRoutine(string effectType)
     {
-        // Removed Ice block
-        if (effectType == "Thorns") 
+        // Apply effect immediately upon trigger
+        if (effectType == "Ice")
+        {
+            // Ice: Reduce drag/decay by half. 
+            inertiaRetention = 1f - ((1f - defaultInertia) * 0.5f);
+        }
+        else if (effectType == "Thorns")
         {
             // Thorns: Slow speed gain drastically
             activeSpeedGain = 3f;
@@ -70,7 +75,6 @@ public class PlayerPhysics : MonoBehaviour
     }
 
     // Create public events that can be referenced by our hazards
-    // public void ApplyIceEffect() => ApplyTimedEffect("Ice"); Ice does not exist yet
+    public void ApplyIceEffect() => ApplyTimedEffect("Ice");
     public void ApplyThornsEffect() => ApplyTimedEffect("Thorns");
 }
-
